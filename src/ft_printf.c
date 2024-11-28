@@ -1,18 +1,12 @@
 #include "ft_printf.h"
+#include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /// Set precision mask
-void handle_precision(t_fmt *fmt, const char **str)
-{
-  fmt->flag_mask |= FLAG_DOT_MASK;
-  fmt->precision_len = ft_atoi(++*str);
-  while (ft_isdigit(**str))
-    (*str)++;
-}
 
-void handle_conversions(t_fmt *fmt, const char **str)
-{
-  char	*conversion;
+static void handle_conversions(t_fmt *fmt, const char **str) {
+  char *conversion;
 
   conversion = ft_strchr(CONVERSIONS, **str);
   if (!conversion)
@@ -23,53 +17,52 @@ void handle_conversions(t_fmt *fmt, const char **str)
   (*str)++;
 }
 
-void handle_variable_flag(t_fmt *fmt, const char **str)
+static void update_flag(t_fmt *fmt, unsigned char flag_mask, const char **str) {
+  fmt->flag_mask |= flag_mask;
+  (*str)++;
+}
+
+static void handle_width(t_fmt *fmt, const char **str)
 {
-  if (**str == '-')
-  {
-    if (fmt->flag_mask & FLAG_DASH_MASK)
-      fmt->flag_mask |= FLAG_VALID_MASK;
-    fmt->flag_mask |= FLAG_DASH_MASK;
-    fmt->flag_len = ft_atoi(++(*str));
-  }
-  else
-  {
-    if (fmt->flag_mask & FLAG_ZERO_MASK)
-      fmt->flag_mask |= FLAG_VALID_MASK;
-    fmt->flag_mask |= FLAG_ZERO_MASK;
-    if (!(fmt->flag_mask & FLAG_DASH_MASK))
-      fmt->flag_len = ft_atoi(++(*str));
-  }
+  fmt->width_len = ft_atoi(*str);
   while (ft_isdigit(**str))
     (*str)++;
 }
 
-void handle_flag(t_fmt *fmt, const char **str) {
+static void handle_precision(t_fmt *fmt, const char **str)
+{
+  fmt->flag_mask |= FLAG_DOT_MASK;
+  fmt->precision_len = ft_atoi(++*str);
+  while (ft_isdigit(**str))
+    (*str)++;
+}
+
+void handle_flag(t_fmt *fmt, const char **str)
+{
   char *flag;
 
-  fmt->original = (*str)++;
   while (**str) {
-    if (fmt->flag_mask & FLAG_DOT_MASK)
-      fmt->flag_mask |= FLAG_VALID_MASK;
     flag = ft_strchr(FLAGS, **str);
-    if (!flag)
-      break ;
+    if (!flag && is_nonzero_digit(**str))
+    {
+      handle_width(fmt, str);
+      continue;
+    }
+    else if (!flag)
+      break;
     if (*flag == '+')
-      fmt->flag_mask |= FLAG_PLUS_MASK;
+      update_flag(fmt, FLAG_PLUS_MASK, str);
     else if (*flag == '#')
-      fmt->flag_mask |= FLAG_HASH_MASK;
+      update_flag(fmt, FLAG_HASH_MASK, str);
     else if (*flag == ' ')
-      fmt->flag_mask |= FLAG_SPACE_MASK;
-    else if (*flag == '-' || *flag == '0')
-      handle_variable_flag(fmt, str);
+      update_flag(fmt, FLAG_SPACE_MASK, str);
+    else if (*flag == '-')
+      update_flag(fmt, FLAG_DASH_MASK, str);
+    else if (*flag == '0')
+      update_flag(fmt, FLAG_ZERO_MASK, str);
     else if (*flag == '.')
       handle_precision(fmt, str);
-    else
-      break;
-    if (*flag != '-' && *flag != '0')
-      (*str)++;
   }
-  fmt->original_len += *str - fmt->original;
 }
 
 int handle_specifiers(const char **str, va_list *v_arg) {
@@ -79,20 +72,19 @@ int handle_specifiers(const char **str, va_list *v_arg) {
 
   count = 0;
   initialize_fmt(&fmt);
-  // printf("Init fmt\n");
+  fmt.original = (*str)++;
   handle_flag(&fmt, str);
-  // printf("Handle flags\n");
+  fmt.original_len += *str - fmt.original;
   handle_conversions(&fmt, str);
-  // printf("Handle conversions\n");
   print_fmt(&fmt, v_arg);
   return (count);
 }
 
 int ft_printf(const char *str, ...) {
-  int 				count;
-  size_t 			printable;
-  va_list			v_arg;
-  const char	*iterator;
+  int count;
+  size_t printable;
+  va_list v_arg;
+  const char *iterator;
 
   count = 0;
   iterator = str;
@@ -106,7 +98,7 @@ int ft_printf(const char *str, ...) {
       write(1, str, printable);
     count += printable;
     if (!*iterator)
-      break ;
+      break;
     count += handle_specifiers(&iterator, &v_arg);
     str = iterator;
   }
