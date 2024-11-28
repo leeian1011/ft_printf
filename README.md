@@ -41,3 +41,19 @@ This is to improve throughput, and my attempt of approaching the problem with mi
 
 > You can argue that some of these approaches are technically premature-optimizations, and while I agree with that sentiment, this project is a learning project
 so whatever I attempt and use here is more for the learning experience rather than real-world feasibility.
+
+## Pitfalls
+
+Whilst giving the project a rough attempt, I encountered a minor issue, I had misjuded how the flags behave in `printf`.<br>
+My assumption was that the '-' and '0' flags required the width to be specified after them, for an example:
+```
+'%025+.3'
+'%-25 .3'
+```
+However, this is not the case as printf has a very specific format which happens to be:
+```
+%[flags][width][precision][specifier]
+```
+
+My first thought after uncovering this, is to always make sure to RTFM.
+Followed by, realizing that this could technically be solved with regex, and I changed my code accordingly.
