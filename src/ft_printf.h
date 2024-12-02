@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/02 21:28:06 by ialee             #+#    #+#             */
+/*   Updated: 2024/12/02 21:36:57 by ialee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
@@ -18,26 +30,34 @@
 
 # include "../includes/libft/libft.h"
 # include <stdarg.h>
+# include <sys/types.h> 
 
 typedef struct s_fmt {
-  char 					conversion;
-  const char		*original;
-  unsigned char	flag_mask;
-  size_t					width_len;
-  size_t				original_len;
-  size_t				precision_len;
+	char			conversion;
+	const char		*original;
+	unsigned char	flag_mask;
+	size_t			width_len;
+	size_t			original_len;
+	size_t			precision_len;
+	char			*buf;
 }	t_fmt;
 
+/// fmt
 void	initialize_fmt(t_fmt *fmt);
-char		*ft_ltoa(long num);
+size_t	num_places(long num);
 int		is_nonzero_digit(char c);
-size_t num_places(long num);
 int		fmt_string(t_fmt *fmt, char *str);
 int		fmt_char(t_fmt *fmt, char c);
-int		fmt_ptr(t_fmt *fmt, unsigned long ptr);
+int		fmt_ptr(t_fmt *fmt, ulong ptr);
 int		fmt_integer(t_fmt *fmt, long integer);
-int		fmt_hex(t_fmt *fmt, unsigned int hex);
+int		fmt_hex(t_fmt *fmt, uint hex);
 int		print_fmt(t_fmt *fmt, va_list *v_arg);
+
+/// Long to Ascii
+char	*ft_ltoa(long num);
+
+/// Specifier handling for ft_printf (util). 
+int		handle_specifiers(const char **str, va_list *v_arg);
 
 int		ft_printf(const char *str, ...);
 #endif
