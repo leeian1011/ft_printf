@@ -13,6 +13,8 @@
 # define FLAG_VALID_MASK 1
 # define FLAG_ZERO_DOT_MASK 12
 # define ARG_BUFFER_SIZE 4096 
+# define HEX_MAX_LENGTH 8
+# define HEX_PREFIX "0x"
 
 # include "../includes/libft/libft.h"
 # include <stdarg.h>
@@ -21,20 +23,20 @@ typedef struct s_fmt {
   char 					conversion;
   const char		*original;
   unsigned char	flag_mask;
-  long long			width_len;
+  size_t					width_len;
   size_t				original_len;
   size_t				precision_len;
 }	t_fmt;
 
 void	initialize_fmt(t_fmt *fmt);
+char		*ft_ltoa(long num);
 int		is_nonzero_digit(char c);
-int		fmt_char(t_fmt *fmt, va_list *v_arg);
-int		fmt_string(t_fmt *fmt, va_list *v_arg);
-int		fmt_ptr(t_fmt *fmt, va_list *v_arg);
-int		fmt_integer(t_fmt *fmt, va_list *v_arg);
-int		fmt_uinteger(t_fmt *fmt, va_list *v_arg);
-int		fmt_hex(t_fmt *fmt, va_list *v_arg);
-int		fmt_percentage(t_fmt *fmt, va_list *v_arg);
+size_t num_places(long num);
+int		fmt_string(t_fmt *fmt, char *str);
+int		fmt_char(t_fmt *fmt, char c);
+int		fmt_ptr(t_fmt *fmt, unsigned long ptr);
+int		fmt_integer(t_fmt *fmt, long integer);
+int		fmt_hex(t_fmt *fmt, unsigned int hex);
 int		print_fmt(t_fmt *fmt, va_list *v_arg);
 
 int		ft_printf(const char *str, ...);
