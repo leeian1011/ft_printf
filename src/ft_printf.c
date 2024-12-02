@@ -18,6 +18,8 @@ static void handle_conversions(t_fmt *fmt, const char **str) {
 }
 
 static void update_flag(t_fmt *fmt, unsigned char flag_mask, const char **str) {
+  if (fmt->width_len != 0 || fmt->flag_mask & FLAG_DOT_MASK)
+    fmt->flag_mask |= FLAG_VALID_MASK;
   fmt->flag_mask |= flag_mask;
   (*str)++;
 }
@@ -31,6 +33,8 @@ static void handle_width(t_fmt *fmt, const char **str)
 
 static void handle_precision(t_fmt *fmt, const char **str)
 {
+  if (fmt->flag_mask & FLAG_DOT_MASK)
+    fmt->flag_mask |= FLAG_VALID_MASK;
   fmt->flag_mask |= FLAG_DOT_MASK;
   fmt->precision_len = ft_atoi(++*str);
   while (ft_isdigit(**str))
@@ -67,17 +71,13 @@ void handle_flag(t_fmt *fmt, const char **str)
 
 int handle_specifiers(const char **str, va_list *v_arg) {
   t_fmt fmt;
-  char *flag;
-  int count;
 
-  count = 0;
   initialize_fmt(&fmt);
   fmt.original = (*str)++;
   handle_flag(&fmt, str);
   fmt.original_len += *str - fmt.original;
   handle_conversions(&fmt, str);
-  print_fmt(&fmt, v_arg);
-  return (count);
+  return(print_fmt(&fmt, v_arg));
 }
 
 int ft_printf(const char *str, ...) {
@@ -92,11 +92,9 @@ int ft_printf(const char *str, ...) {
   while (*str) {
     while (*iterator != '%' && *iterator)
       iterator++;
-    // printf("\n%p vs %p\n", &iterator, str);
     printable = iterator - str;
     if (printable)
-      write(1, str, printable);
-    count += printable;
+      count += write(1, str, printable);
     if (!*iterator)
       break;
     count += handle_specifiers(&iterator, &v_arg);
