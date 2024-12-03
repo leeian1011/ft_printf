@@ -6,7 +6,7 @@
 /*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:06:45 by ialee             #+#    #+#             */
-/*   Updated: 2024/12/03 20:48:04 by ialee            ###   ########.fr       */
+/*   Updated: 2024/12/03 23:04:14 by ialee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static int	fmti_places(t_fmt *fmt, long num, size_t *arg_len, char **int_str)
 		free(result);
 		return (0);
 	}
-	if (!(fmt->flag_mask & FLAG_DASH_MASK) && num == 0 && fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0)
+	if (!(fmt->flag_mask & FLAG_DASH_MASK) && num == 0
+		&& fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0)
 		*arg_len = 0;
 	if (num < 0)
 	{
@@ -56,7 +57,8 @@ static size_t	fmtint_establish_sign(t_fmt *fmt, size_t *buffer_offset)
 	}
 	else if ((fmt->flag_mask & FLAG_ZERO_MASK))
 	{
-		if (fmt->flag_mask & FLAG_NEGATIVE_INTEGER_MASK && !(fmt->flag_mask & FLAG_DOT_MASK))
+		if (fmt->flag_mask & FLAG_NEGATIVE_INTEGER_MASK
+			&& !(fmt->flag_mask & FLAG_DOT_MASK))
 		{
 			fmt->buf[(*buffer_offset)++] = '-';
 			fmt->precision_len -= 1;
@@ -70,15 +72,14 @@ static void	fmti_ec(t_fmt *fmt, long num, size_t sz, size_t *idx)
 	size_t		arg_len;
 	long		precision_len;
 	char		*int_str;
-	int			is_monke;
 
 	int_str = "";
 	precision_len = fmt->precision_len;
-	is_monke = 0;
 	fmti_places(fmt, num, &arg_len, &int_str);
 	if (fmt->precision_len > 0 && fmt->flag_mask & FLAG_DOT_MASK)
 	{
-		if (fmt->flag_mask & FLAG_NEGATIVE_INTEGER_MASK && !ft_strchr(fmt->buf, '-'))
+		if (fmt->flag_mask & FLAG_NEGATIVE_INTEGER_MASK
+			&& !ft_strchr(fmt->buf, '-'))
 			*idx = ft_strlcat(fmt->buf, "-", sz);
 		while ((long)(precision_len-- - arg_len) > 0)
 		{
@@ -90,11 +91,7 @@ static void	fmti_ec(t_fmt *fmt, long num, size_t sz, size_t *idx)
 		&& fmt->precision_len == 0 && num == 0)
 		fmt->width_len++;
 	else
-	{
-		if (!(fmt->flag_mask & FLAG_ZERO_MASK) && fmt->flag_mask & FLAG_NEGATIVE_INTEGER_MASK && is_monke < 1 && !ft_strchr(fmt->buf, '-'))
-			ft_strlcat(fmt->buf, "-", sz);
-		*idx = ft_strlcat(fmt->buf, int_str, sz);
-	}
+		*idx = fmtint_flag_util(fmt, sz, num, int_str);
 	fmt->width_len -= arg_len;
 	free(int_str);
 }
@@ -118,15 +115,8 @@ static int	fmti_prints(t_fmt *fmt, long num, size_t arg_len, size_t size)
 			fmt->buf[index++] = ' ';
 		return (write(1, fmt->buf, index));
 	}
-	else if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
-		while (fmt->width_len > 0 && (long)(width_len-- - arg_len) > 0)
-			fmt->buf[index++] = ' ';
-	else if (fmt->flag_mask & FLAG_ZERO_MASK)
-		while (fmt->width_len > 0 && (long)(width_len-- - arg_len) > 0)
-			fmt->buf[index++] = '0';
-	else if (fmt->width_len > 0)
-		while (fmt->width_len > 0 && (long)(width_len-- - arg_len) > 0)
-			fmt->buf[index++] = ' ';
+	else
+		fmtint_flag_util(fmt, &index, width_len, arg_len);
 	fmti_ec(fmt, num, size, &index);
 	return (write(1, fmt->buf, index));
 }

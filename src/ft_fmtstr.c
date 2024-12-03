@@ -6,7 +6,7 @@
 /*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:11:23 by ialee             #+#    #+#             */
-/*   Updated: 2024/12/03 20:53:03 by ialee            ###   ########.fr       */
+/*   Updated: 2024/12/03 23:05:07 by ialee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,24 @@ static int	fmtstr_prints(t_fmt *fmt, char *arg, long len)
 		return (write(1, fmt->buf, index));
 	}
 	else if (fmt->flag_mask & FLAG_ZERO_MASK || fmt->width_len > 0)
-	{
-		while ((long)(fmt->width_len-- - len) > 0)
-			fmt->buf[index++] = ' ';
-		if ((fmt->flag_mask & FLAG_DOT_MASK && (long)fmt->precision_len < len) || len == 0)
-		{
-			while ((long)fmt->precision_len-- > 0)
-				fmt->buf[index++] = *arg++;
-		}
-		else
-		{
-			while (len-- > 0)
-				fmt->buf[index++] = *arg++;
-		}
-		return (write(1, fmt->buf, index));
-	}
+		return (fmtstr_zutil(fmt, index, len, arg));
 	else
 		return (write(1, arg, len));
 }
+		// return (write(1, fmt->buf, index));
+// while ((long)(fmt->width_len-- - len) > 0)
+		// 	fmt->buf[index++] = ' ';
+//if ((fmt->flag_mask & FLAG_DOT_MASK && (long)fmt->precision_len < len)
+// || len == 0)
+		// {
+		// 	while ((long)fmt->precision_len-- > 0)
+		// 		fmt->buf[index++] = *arg++;
+		// }
+		// else
+		// {
+		// 	while (len-- > 0)
+		// 		fmt->buf[index++] = *arg++;
+		// }
 
 static int	fmtstr_establish_str(t_fmt *fmt, char **str, long *full_len)
 {

@@ -6,7 +6,7 @@
 /*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:28:06 by ialee             #+#    #+#             */
-/*   Updated: 2024/12/02 21:36:57 by ialee            ###   ########.fr       */
+/*   Updated: 2024/12/03 23:10:06 by ialee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,13 @@ int		fmt_ptr(t_fmt *fmt, ulong ptr);
 int		fmt_integer(t_fmt *fmt, long integer);
 int		fmt_hex(t_fmt *fmt, uint hex);
 int		print_fmt(t_fmt *fmt, va_list *v_arg);
+
+/// fmt util
+size_t	fmthex_flag_util(t_fmt *fmt, size_t *index, char *num, size_t hex_len);
+void	fmtptr_putil(t_fmt *fmt, long precision_len, long hex_len, size_t *idx);
+int		fmtstr_zutil(t_fmt *fmt, size_t index, size_t len, char *arg);
+size_t	fmtint_width_util(t_fmt *fmt, size_t sz, long num, char *int_str);
+void	fmtint_flag_util(t_fmt *fmt, size_t *idx, long width_len, long arg_len);
 
 /// Long to Ascii
 char	*ft_ltoa(long num);

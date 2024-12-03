@@ -6,7 +6,7 @@
 /*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:09:28 by ialee             #+#    #+#             */
-/*   Updated: 2024/12/03 20:54:28 by ialee            ###   ########.fr       */
+/*   Updated: 2024/12/03 22:39:37 by ialee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,9 @@ static void	fmtptr_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 {
 	long	hex_len;
 	long	copy_hex_len;
-	long	copy_precision_len;
 
 	hex_len = ft_strlen(hex);
-	copy_precision_len = fmt->precision_len;
-	if (fmt->precision_len > 0)
-	{
-		while (copy_precision_len-- - hex_len > 0)
-		{
-			fmt->buf[(*idx)++] = '0';
-			fmt->width_len--;
-		}
-	}
+	fmtptr_prec_util(fmt, fmt->precision_len, hex_len, idx);
 	if ((fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0)
 		&& ft_strncmp(hex, "0", hex_len) == 0)
 		fmt->width_len++;
@@ -95,6 +86,15 @@ static void	fmtptr_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 			fmt->buf[copy_hex_len] = ft_toupper(fmt->buf[copy_hex_len]);
 	fmt->width_len -= hex_len;
 }
+	// copy_precision_len = fmt->precision_len;
+	// if (fmt->precision_len > 0)
+	// {
+	// 	while (copy_precision_len-- - hex_len > 0)
+	// 	{
+	// 		fmt->buf[(*idx)++] = '0';
+	// 		fmt->width_len--;
+	// 	}
+	// }
 
 static int	fmtptr_prints(t_fmt *fmt, char *num, size_t ptr_len, size_t size)
 {
