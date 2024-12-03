@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <sys/types.h>
+#include <stdio.h>
 
 static char	*fmthex_itoh(unsigned long hex)
 {
@@ -51,7 +51,7 @@ static int	fmtptr_init(t_fmt *fmt, char **ahex, ulong hex, size_t *hex_len)
 			*hex_len = write(1, "(nil)", 5);
 		else
 		{
-			*hex_len += write(1, "0x", 2);
+			*hex_len += write(1, HEX_PREFIX, 2);
 			write(1, *ahex, *hex_len - 2);
 		}
 		free(*ahex);
@@ -80,7 +80,15 @@ static void	fmtptr_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 		&& ft_strncmp(hex, "0", hex_len) == 0)
 		fmt->width_len++;
 	else
-		*idx = ft_strlcat(fmt->buf, hex, sz);
+  {
+    if (ft_strncmp(hex, "0", hex_len) == 0)
+		  *idx = ft_strlcat(fmt->buf, "(nil)", sz);
+    else
+    {
+      ft_strlcat(fmt->buf, HEX_PREFIX, sz);
+		  *idx = ft_strlcat(fmt->buf, hex, sz);
+    }
+  }
 	copy_hex_len = hex_len;
 	if (fmt->conversion == 'X')
 		while (copy_hex_len--)
@@ -92,18 +100,22 @@ static int	fmtptr_prints(t_fmt *fmt, char *num, size_t ptr_len, size_t size)
 {
 	size_t	index;
 
-	index = 0;
+  index = 0;
+  // ptr_len += 2;
+  if (ft_strncmp(num, "0", ft_strlen(num)) == 0)
+    fmt->width_len -= 4;
+  else
+    fmt->width_len -= 2;
 	if (fmt->precision_len > ptr_len)
 		ptr_len = fmt->precision_len;
-	index += ft_strlcpy(fmt->buf, HEX_PREFIX, size);
-	fmt->width_len -= 2;
 	if (fmt->flag_mask & FLAG_DASH_MASK)
 	{
 		fmtptr_ec(fmt, num, size, &index);
 		while ((long)fmt->width_len-- > 0)
 			fmt->buf[index++] = ' ';
 	}
-	else if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
+	else if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK
+    || fmt->width_len > 0)
 	{
 		while (fmt->width_len > 0 && (long)(fmt->width_len-- - ptr_len) > 0)
 			fmt->buf[index++] = ' ';
@@ -111,10 +123,7 @@ static int	fmtptr_prints(t_fmt *fmt, char *num, size_t ptr_len, size_t size)
 	}
 	else
 		fmtptr_ec(fmt, num, size, &index);
-	if (ft_strncmp(fmt->buf, "0x0", ft_strlen(fmt->buf)) == 0)
-		return (write(1, "(nil)", 5));
-	else
-		return (write(1, fmt->buf, index));
+	return (write(1, fmt->buf, index));
 }
 
 int	fmt_ptr(t_fmt *fmt, unsigned long ptr)

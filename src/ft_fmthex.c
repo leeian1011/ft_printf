@@ -12,6 +12,7 @@
 
 #include "ft_printf.h"
 #include <sys/types.h>
+#include <stdio.h>
 
 static char	*fmthex_itoh(unsigned int hex)
 {
@@ -112,11 +113,22 @@ static int	fmthex_prints(t_fmt *fmt, char *num, size_t hex_len, size_t size)
 		return (write(1, fmt->buf, index));
 	}
 	else if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
+  {
+    if ((fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0) && ft_strncmp(num, "0", hex_len) == 0)
+      fmt->width_len++;
 		while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
 			fmt->buf[index++] = ' ';
+  }
 	else if (fmt->flag_mask & FLAG_ZERO_MASK)
-		while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
-			fmt->buf[index++] = '0';
+   {
+     while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
+       fmt->buf[index++] = '0';
+   }
+  else if (fmt->width_len > 0)
+  {
+     while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
+       fmt->buf[index++] = ' ';
+  }
 	fmth_ec(fmt, num, size, &index);
 	return (write(1, fmt->buf, index));
 }

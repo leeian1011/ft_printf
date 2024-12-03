@@ -1,7 +1,8 @@
 NAME=libftprintf.a
 CC = cc
 ARC = ar rc
-SOURCE = src/ft_printf.c src/ft_fmthex.c src/ft_fmtstr.c src/ft_fmtptr.c src/ft_fmtint.c src/ft_fmt.c src/ft_ltoa.c
+SOURCE = src/ft_printf.c src/ft_fmthex.c src/ft_fmtstr.c src/ft_fmtptr.c src/ft_fmtint.c src/ft_fmt.c src/ft_ltoa.c \
+				 src/ft_printf_handler.c
 LIBFT_PATH = ./includes/libft/
 OBJECT = $(SOURCE:.c=.o)
 TEST_TYPE = str int ptr hex

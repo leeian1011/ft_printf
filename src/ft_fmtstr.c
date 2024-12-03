@@ -21,39 +21,50 @@ static int	fmtc_print_specifier(t_fmt *fmt, char c)
 	if (fmt->flag_mask & FLAG_DASH_MASK)
 	{
 		fmt->buf[index++] = c;
-		while (fmt->width_len-- - 1 > 0)
+		while ((long)(fmt->width_len-- - 1) > 0)
 			fmt->buf[index++] = ' ';
 		return (write(1, fmt->buf, index));
 	}
-	else if (fmt->flag_mask & FLAG_ZERO_MASK || fmt->width_len > 0)
+	else if (fmt->width_len > 0)
 	{
-		while (fmt->width_len-- - 1 > 0)
+		while ((long)(fmt->width_len-- - 1) > 0)
 			fmt->buf[index++] = ' ';
 		fmt->buf[index++] = c;
-		index += ft_strlcpy(&fmt->buf[index], &c, 2);
 		return (write(1, fmt->buf, index));
 	}
 	else
 		return (write(1, &c, 1));
 }
 
-static int	fmtstr_prints(t_fmt *fmt, char *arg, long len, size_t sz)
+static int	fmtstr_prints(t_fmt *fmt, char *arg, long len)
 {
 	int	index;
+  int copy_len;
 
 	index = 0;
 	if (fmt->flag_mask & FLAG_DASH_MASK)
 	{
-		index = ft_strlcpy(fmt->buf, arg, sz);
+    copy_len = len;
+    while (copy_len-- > 0)
+      fmt->buf[index++] = *arg++;
 		while ((long)(fmt->width_len-- - len) > 0)
 			fmt->buf[index++] = ' ';
 		return (write(1, fmt->buf, index));
 	}
 	else if (fmt->flag_mask & FLAG_ZERO_MASK || fmt->width_len > 0)
 	{
-		while (fmt->width_len-- - len > 0)
+		while ((long)(fmt->width_len-- - len) > 0)
 			fmt->buf[index++] = ' ';
-		index = ft_strlcat(fmt->buf, arg, sz);
+    if ((fmt->flag_mask & FLAG_DOT_MASK && (long)fmt->precision_len < len) || len == 0)
+    {
+      while ((long)fmt->precision_len-- > 0)
+        fmt->buf[index++] = *arg++;
+    }
+    else
+    {
+      while (len-- > 0)
+        fmt->buf[index++] = *arg++;
+    }
 		return (write(1, fmt->buf, index));
 	}
 	else
@@ -81,7 +92,7 @@ static int	fmtstr_establish_str(t_fmt *fmt, char **str, long *full_len)
 	}
 	result = ft_strlen(*str);
 	if (fmt->flag_mask & FLAG_DOT_MASK && result > fmt->precision_len)
-		result = fmt->precision_len;
+    result = fmt->precision_len;
 	*full_len = result;
 	if (fmt->width_len > result)
 		*full_len = fmt->width_len;
@@ -104,14 +115,14 @@ int	fmt_string(t_fmt *fmt, char *str)
 		fmt->buf = ft_calloc(full_len + 1, sizeof(char));
 		if (!fmt->buf)
 			return (0);
-		full_len = fmtstr_prints(fmt, str, arg_len, full_len + 1);
+		full_len = fmtstr_prints(fmt, str, arg_len);
 		free(fmt->buf);
 	}
 	else
 	{
 		ft_bzero(buffer, ARG_BUFFER_SIZE);
 		fmt->buf = buffer;
-		full_len = fmtstr_prints(fmt, str, arg_len, ARG_BUFFER_SIZE);
+		full_len = fmtstr_prints(fmt, str, arg_len);
 	}
 	return (full_len);
 }
