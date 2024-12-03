@@ -13,6 +13,7 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
+/// Integer to Hex ascii.
 static char	*fmthex_itoh(unsigned long hex)
 {
 	char			*ahex;
@@ -41,6 +42,7 @@ static char	*fmthex_itoh(unsigned long hex)
 	return (ahex);
 }
 
+/// Initializes and determines the ptr value to be printed.
 static int	fmtptr_init(t_fmt *fmt, char **ahex, ulong hex, size_t *hex_len)
 {
 	*ahex = fmthex_itoh(hex);
@@ -60,10 +62,11 @@ static int	fmtptr_init(t_fmt *fmt, char **ahex, ulong hex, size_t *hex_len)
 	return (0);
 }
 
+/// (fmtptr_establish_conversion)
+/// Determines the width_len as well as the value representable..
 static void	fmtptr_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 {
 	long	hex_len;
-	long	copy_hex_len;
 
 	hex_len = ft_strlen(hex);
 	fmtptr_putil(fmt, fmt->precision_len, hex_len, idx);
@@ -80,22 +83,11 @@ static void	fmtptr_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 			*idx = ft_strlcat(fmt->buf, hex, sz);
 		}
 	}
-	copy_hex_len = hex_len;
-	if (fmt->conversion == 'X')
-		while (copy_hex_len--)
-			fmt->buf[copy_hex_len] = ft_toupper(fmt->buf[copy_hex_len]);
 	fmt->width_len -= hex_len;
 }
-	// copy_precision_len = fmt->precision_len;
-	// if (fmt->precision_len > 0)
-	// {
-	// 	while (copy_precision_len-- - hex_len > 0)
-	// 	{
-	// 		fmt->buf[(*idx)++] = '0';
-	// 		fmt->width_len--;
-	// 	}
-	// }
 
+/// Prints the passed in variadic argument (void */long)
+/// along with it's appropriate flags.
 static int	fmtptr_prints(t_fmt *fmt, char *num, size_t ptr_len, size_t size)
 {
 	size_t	index;
@@ -125,6 +117,7 @@ static int	fmtptr_prints(t_fmt *fmt, char *num, size_t ptr_len, size_t size)
 	return (write(1, fmt->buf, index));
 }
 
+/// Entry point for void * conversion handling.
 int	fmt_ptr(t_fmt *fmt, unsigned long ptr)
 {
 	char		buffer[ARG_BUFFER_SIZE];

@@ -12,6 +12,7 @@
 
 #include "ft_printf.h"
 
+/// Setup logic
 static void	update_flag(t_fmt *fmt, unsigned char flag_mask, const char **str)
 {
 	if (fmt->width_len != 0 || fmt->flag_mask & FLAG_DOT_MASK)
@@ -20,6 +21,7 @@ static void	update_flag(t_fmt *fmt, unsigned char flag_mask, const char **str)
 	(*str)++;
 }
 
+/// Width
 static void	handle_width(t_fmt *fmt, const char **str)
 {
 	fmt->width_len = ft_atoi(*str);
@@ -27,6 +29,7 @@ static void	handle_width(t_fmt *fmt, const char **str)
 		(*str)++;
 }
 
+/// Precision flag (.)
 static void	handle_precision(t_fmt *fmt, const char **str)
 {
 	if (fmt->flag_mask & FLAG_DOT_MASK)
@@ -37,6 +40,9 @@ static void	handle_precision(t_fmt *fmt, const char **str)
 		(*str)++;
 }
 
+/// Flag logic.
+/// This is essentially a switch that performs 
+/// setup logic when a flag is identified.
 static void	handle_flag(t_fmt *fmt, const char **str)
 {
 	char	*flag;
@@ -66,6 +72,9 @@ static void	handle_flag(t_fmt *fmt, const char **str)
 	}
 }
 
+/// Handle Flags for ft_printf.
+/// This initiates the `fmt` struct and assigns the
+/// appropriae flags and conversion bitmasks/
 int	handle_specifiers(const char **str, va_list *v_arg)
 {
 	t_fmt	fmt;

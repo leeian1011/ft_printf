@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 
+/// Integer to Hex ascii.
 static char	*fmthex_itoh(unsigned int hex)
 {
 	char			*ahex;
@@ -42,6 +43,7 @@ static char	*fmthex_itoh(unsigned int hex)
 	return (ahex);
 }
 
+/// Initializes hex as string, and determines between lowerX or upperX.
 static int	fmth_init(t_fmt *fmt, char **ahex, uint hex, size_t *hex_len)
 {
 	size_t	index;
@@ -66,6 +68,8 @@ static int	fmth_init(t_fmt *fmt, char **ahex, uint hex, size_t *hex_len)
 	return (0);
 }
 
+/// (fmthex_establish_conversion)
+/// Determines the width len and setup values for flag handling.
 static void	fmth_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 {
 	long	hex_len;
@@ -94,6 +98,9 @@ static void	fmth_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 	fmt->width_len -= hex_len;
 }
 
+
+/// Prints the passed in variadic argument (int as hex)
+/// along with it's appropriate flags.
 static int	fmthex_prints(t_fmt *fmt, char *num, size_t hex_len, size_t size)
 {
 	size_t	index;
@@ -117,23 +124,8 @@ static int	fmthex_prints(t_fmt *fmt, char *num, size_t hex_len, size_t size)
 	fmth_ec(fmt, num, size, &index);
 	return (write(1, fmt->buf, index));
 }
-	// else if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
-	// {
-	// 	if ((fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0)
-// 	&& ft_strncmp(num, "0", hex_len) == 0)
-	// 		fmt->width_len++;
-	// 	while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
-	// 		fmt->buf[index++] = ' ';
-	// }
-	// else if (fmt->flag_mask & FLAG_ZERO_MASK)
-	// {
-	// 	while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
-	// 		fmt->buf[index++] = '0';
-	// }
-	// else if (fmt->width_len > 0)
-	// 	while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
-	// 		fmt->buf[index++] = ' ';
 
+/// Entry point for int/unsigned int as hex conversion handling.
 int	fmt_hex(t_fmt *fmt, unsigned int hex)
 {
 	char		buffer[ARG_BUFFER_SIZE];

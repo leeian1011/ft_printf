@@ -12,6 +12,9 @@
 
 #include "ft_printf.h"
 
+/// printf macro clone.
+/// Only supports the conversions: cspdiuxX%
+/// Supports the flags '0-.+ #'
 int	ft_printf(const char *str, ...)
 {
 	int			count;

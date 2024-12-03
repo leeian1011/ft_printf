@@ -13,6 +13,7 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
+/// Instantiate num as ascii and handle particular scenarios between flags.
 static int	fmti_places(t_fmt *fmt, long num, size_t *arg_len, char **int_str)
 {
 	char	*result;
@@ -40,6 +41,8 @@ static int	fmti_places(t_fmt *fmt, long num, size_t *arg_len, char **int_str)
 	return (1);
 }
 
+/// Handles behaviour for the '+', '0' and ' ' flags based off 
+/// the polarity ofnum.
 static size_t	fmtint_establish_sign(t_fmt *fmt, size_t *buffer_offset)
 {
 	size_t	count;
@@ -67,6 +70,8 @@ static size_t	fmtint_establish_sign(t_fmt *fmt, size_t *buffer_offset)
 	return (count);
 }
 
+/// (fmti_establish_conversion)
+/// Determines the width_len as well as handling particular negative scenarios.
 static void	fmti_ec(t_fmt *fmt, long num, size_t sz, size_t *idx)
 {
 	size_t		arg_len;
@@ -96,6 +101,8 @@ static void	fmti_ec(t_fmt *fmt, long num, size_t sz, size_t *idx)
 	free(int_str);
 }
 
+/// Prints the passed in variadic argument (int)
+/// along with it's appropriate flags.
 static int	fmti_prints(t_fmt *fmt, long num, size_t arg_len, size_t size)
 {
 	size_t	index;
@@ -121,6 +128,7 @@ static int	fmti_prints(t_fmt *fmt, long num, size_t arg_len, size_t size)
 	return (write(1, fmt->buf, index));
 }
 
+/// Entry point for int/unsigned int conversion handling.
 int	fmt_integer(t_fmt *fmt, long integer)
 {
 	char		buffer[ARG_BUFFER_SIZE];

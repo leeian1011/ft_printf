@@ -12,6 +12,7 @@
 
 #include "../includes/libft/libft.h"
 
+/// unsigned long to ascii.
 static char	*ft_ultoa(unsigned long num, size_t num_places, char *buffer)
 {
 	if (num == 0)

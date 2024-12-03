@@ -13,29 +13,8 @@
 #include "ft_printf.h"
 #include <stdio.h> 
 
-static int	fmtc_print_specifier(t_fmt *fmt, char c)
-{
-	int	index;
-
-	index = 0;
-	if (fmt->flag_mask & FLAG_DASH_MASK)
-	{
-		fmt->buf[index++] = c;
-		while ((long)(fmt->width_len-- - 1) > 0)
-			fmt->buf[index++] = ' ';
-		return (write(1, fmt->buf, index));
-	}
-	else if (fmt->width_len > 0)
-	{
-		while ((long)(fmt->width_len-- - 1) > 0)
-			fmt->buf[index++] = ' ';
-		fmt->buf[index++] = c;
-		return (write(1, fmt->buf, index));
-	}
-	else
-		return (write(1, &c, 1));
-}
-
+/// Prints the passed in variadic argument (char *)
+/// along with it's appropriate flags.
 static int	fmtstr_prints(t_fmt *fmt, char *arg, long len)
 {
 	int	index;
@@ -71,6 +50,8 @@ static int	fmtstr_prints(t_fmt *fmt, char *arg, long len)
 		// 		fmt->buf[index++] = *arg++;
 		// }
 
+/// This function is used to determine the validity of a string,
+/// particularly in the scenario of NULL and precisions.
 static int	fmtstr_establish_str(t_fmt *fmt, char **str, long *full_len)
 {
 	size_t		result;
@@ -99,6 +80,7 @@ static int	fmtstr_establish_str(t_fmt *fmt, char **str, long *full_len)
 	return (result);
 }
 
+/// Entry point for String conversion handling.
 int	fmt_string(t_fmt *fmt, char *str)
 {
 	char	buffer[ARG_BUFFER_SIZE];
@@ -127,6 +109,32 @@ int	fmt_string(t_fmt *fmt, char *str)
 	return (full_len);
 }
 
+/// Prints the passed in variadic argument (char)
+/// along with it's appropriate flags.
+static int	fmtc_print_specifier(t_fmt *fmt, char c)
+{
+	int	index;
+
+	index = 0;
+	if (fmt->flag_mask & FLAG_DASH_MASK)
+	{
+		fmt->buf[index++] = c;
+		while ((long)(fmt->width_len-- - 1) > 0)
+			fmt->buf[index++] = ' ';
+		return (write(1, fmt->buf, index));
+	}
+	else if (fmt->width_len > 0)
+	{
+		while ((long)(fmt->width_len-- - 1) > 0)
+			fmt->buf[index++] = ' ';
+		fmt->buf[index++] = c;
+		return (write(1, fmt->buf, index));
+	}
+	else
+		return (write(1, &c, 1));
+}
+
+/// Entry point for Char conversion handling.
 int	fmt_char(t_fmt *fmt, char c)
 {
 	char	buffer[ARG_BUFFER_SIZE];

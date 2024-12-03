@@ -12,6 +12,7 @@
 
 #include "ft_printf.h"
 
+/// Instantiates all fmt struct values.
 void	initialize_fmt(t_fmt *fmt)
 {
 	fmt->width_len = 0;
@@ -46,6 +47,7 @@ size_t	num_places(long num)
 	return (result);
 }
 
+/// Switch for printing conversions.
 int	print_fmt(t_fmt *fmt, va_list *v_arg)
 {
 	if (fmt->flag_mask & FLAG_VALID_MASK)

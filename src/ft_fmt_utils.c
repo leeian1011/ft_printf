@@ -12,6 +12,8 @@
 
 #include "ft_printf.h"
 
+/// fmthex utility function that handles scenarios for the '-', '0' and '.'
+/// flags.
 void	fmthex_flag_util(t_fmt *fmt, size_t *index, char *num, size_t hex_len)
 {
 	if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
@@ -33,6 +35,8 @@ void	fmthex_flag_util(t_fmt *fmt, size_t *index, char *num, size_t hex_len)
 }
 
 /// fmtptr precision util
+/// fmtptr utility function that handles scenarios for the '.'
+/// flags.
 void	fmtptr_putil(t_fmt *fmt, long precision_len, long hex_len, size_t *idx)
 {
 	if (fmt->precision_len > 0)
@@ -45,6 +49,9 @@ void	fmtptr_putil(t_fmt *fmt, long precision_len, long hex_len, size_t *idx)
 	}
 }
 
+/// fmtstr_zero_util ('0' flag)
+/// fmtptr utility function that handles scenarios for the '0'
+/// flags.
 int	fmtstr_zutil(t_fmt *fmt, size_t index, long len, char *arg)
 {
 	while ((long)(fmt->width_len-- - len) > 0)
@@ -63,6 +70,10 @@ int	fmtstr_zutil(t_fmt *fmt, size_t index, long len, char *arg)
 	return (write(1, fmt->buf, index));
 }
 
+
+/// fmtint_width_util
+/// fmtptr utility function that handles scenarios for varying width with flags
+/// '0' and '.'.
 size_t	fmtint_width_util(t_fmt *fmt, size_t sz, long num, char *int_str)
 {
 	if (fmt->flag_mask & FLAG_DOT_MASK
@@ -81,6 +92,8 @@ size_t	fmtint_width_util(t_fmt *fmt, size_t sz, long num, char *int_str)
 	}
 }
 
+/// fmtint_width_util
+/// fmtptr utility function that handles scenarios for the '0' and '.' flags.
 void	fmtint_flag_util(t_fmt *fmt, size_t *idx, long width_len, long arg_len)
 {
 	if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
