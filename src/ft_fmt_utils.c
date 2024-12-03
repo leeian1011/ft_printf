@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-size_t	fmthex_flag_util(t_fmt *fmt, size_t *index, char *num, size_t hex_len)
+void	fmthex_flag_util(t_fmt *fmt, size_t *index, char *num, size_t hex_len)
 {
 	if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
 	{
@@ -45,7 +45,7 @@ void	fmtptr_putil(t_fmt *fmt, long precision_len, long hex_len, size_t *idx)
 	}
 }
 
-int	fmtstr_zutil(t_fmt *fmt, size_t index, size_t len, char *arg)
+int	fmtstr_zutil(t_fmt *fmt, size_t index, long len, char *arg)
 {
 	while ((long)(fmt->width_len-- - len) > 0)
 		fmt->buf[index++] = ' ';

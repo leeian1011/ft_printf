@@ -91,7 +91,7 @@ static void	fmti_ec(t_fmt *fmt, long num, size_t sz, size_t *idx)
 		&& fmt->precision_len == 0 && num == 0)
 		fmt->width_len++;
 	else
-		*idx = fmtint_flag_util(fmt, sz, num, int_str);
+		*idx = fmtint_width_util(fmt, sz, num, int_str);
 	fmt->width_len -= arg_len;
 	free(int_str);
 }

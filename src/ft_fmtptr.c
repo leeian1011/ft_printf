@@ -66,7 +66,7 @@ static void	fmtptr_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 	long	copy_hex_len;
 
 	hex_len = ft_strlen(hex);
-	fmtptr_prec_util(fmt, fmt->precision_len, hex_len, idx);
+	fmtptr_putil(fmt, fmt->precision_len, hex_len, idx);
 	if ((fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0)
 		&& ft_strncmp(hex, "0", hex_len) == 0)
 		fmt->width_len++;

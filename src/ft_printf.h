@@ -54,9 +54,9 @@ int		fmt_hex(t_fmt *fmt, uint hex);
 int		print_fmt(t_fmt *fmt, va_list *v_arg);
 
 /// fmt util
-size_t	fmthex_flag_util(t_fmt *fmt, size_t *index, char *num, size_t hex_len);
+void	fmthex_flag_util(t_fmt *fmt, size_t *index, char *num, size_t hex_len);
 void	fmtptr_putil(t_fmt *fmt, long precision_len, long hex_len, size_t *idx);
-int		fmtstr_zutil(t_fmt *fmt, size_t index, size_t len, char *arg);
+int		fmtstr_zutil(t_fmt *fmt, size_t index, long len, char *arg);
 size_t	fmtint_width_util(t_fmt *fmt, size_t sz, long num, char *int_str);
 void	fmtint_flag_util(t_fmt *fmt, size_t *idx, long width_len, long arg_len);
 
