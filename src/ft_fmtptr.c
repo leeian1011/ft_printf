@@ -6,7 +6,7 @@
 /*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:09:28 by ialee             #+#    #+#             */
-/*   Updated: 2024/12/02 21:41:32 by ialee            ###   ########.fr       */
+/*   Updated: 2024/12/03 20:54:28 by ialee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,15 +80,15 @@ static void	fmtptr_ec(t_fmt *fmt, char *hex, size_t sz, size_t *idx)
 		&& ft_strncmp(hex, "0", hex_len) == 0)
 		fmt->width_len++;
 	else
-  {
-    if (ft_strncmp(hex, "0", hex_len) == 0)
-		  *idx = ft_strlcat(fmt->buf, "(nil)", sz);
-    else
-    {
-      ft_strlcat(fmt->buf, HEX_PREFIX, sz);
-		  *idx = ft_strlcat(fmt->buf, hex, sz);
-    }
-  }
+	{
+		if (ft_strncmp(hex, "0", hex_len) == 0)
+			*idx = ft_strlcat(fmt->buf, "(nil)", sz);
+		else
+		{
+			ft_strlcat(fmt->buf, HEX_PREFIX, sz);
+			*idx = ft_strlcat(fmt->buf, hex, sz);
+		}
+	}
 	copy_hex_len = hex_len;
 	if (fmt->conversion == 'X')
 		while (copy_hex_len--)
@@ -100,12 +100,11 @@ static int	fmtptr_prints(t_fmt *fmt, char *num, size_t ptr_len, size_t size)
 {
 	size_t	index;
 
-  index = 0;
-  // ptr_len += 2;
-  if (ft_strncmp(num, "0", ft_strlen(num)) == 0)
-    fmt->width_len -= 4;
-  else
-    fmt->width_len -= 2;
+	index = 0;
+	if (ft_strncmp(num, "0", ft_strlen(num)) == 0)
+		fmt->width_len -= 4;
+	else
+		fmt->width_len -= 2;
 	if (fmt->precision_len > ptr_len)
 		ptr_len = fmt->precision_len;
 	if (fmt->flag_mask & FLAG_DASH_MASK)
@@ -115,7 +114,7 @@ static int	fmtptr_prints(t_fmt *fmt, char *num, size_t ptr_len, size_t size)
 			fmt->buf[index++] = ' ';
 	}
 	else if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK
-    || fmt->width_len > 0)
+		|| fmt->width_len > 0)
 	{
 		while (fmt->width_len > 0 && (long)(fmt->width_len-- - ptr_len) > 0)
 			fmt->buf[index++] = ' ';

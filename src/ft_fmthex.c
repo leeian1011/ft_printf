@@ -6,7 +6,7 @@
 /*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 20:12:47 by ialee             #+#    #+#             */
-/*   Updated: 2024/12/02 21:39:01 by ialee            ###   ########.fr       */
+/*   Updated: 2024/12/03 20:44:42 by ialee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,22 +113,20 @@ static int	fmthex_prints(t_fmt *fmt, char *num, size_t hex_len, size_t size)
 		return (write(1, fmt->buf, index));
 	}
 	else if ((fmt->flag_mask & FLAG_ZERO_DOT_MASK) == FLAG_ZERO_DOT_MASK)
-  {
-    if ((fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0) && ft_strncmp(num, "0", hex_len) == 0)
-      fmt->width_len++;
+	{
+		if ((fmt->flag_mask & FLAG_DOT_MASK && fmt->precision_len == 0) && ft_strncmp(num, "0", hex_len) == 0)
+			fmt->width_len++;
 		while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
 			fmt->buf[index++] = ' ';
-  }
+	}
 	else if (fmt->flag_mask & FLAG_ZERO_MASK)
-   {
-     while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
-       fmt->buf[index++] = '0';
-   }
-  else if (fmt->width_len > 0)
-  {
-     while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
-       fmt->buf[index++] = ' ';
-  }
+	{
+		while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
+			fmt->buf[index++] = '0';
+	}
+	else if (fmt->width_len > 0)
+		while (fmt->width_len > 0 && (long)(fmt->width_len-- - hex_len) > 0)
+			fmt->buf[index++] = ' ';
 	fmth_ec(fmt, num, size, &index);
 	return (write(1, fmt->buf, index));
 }

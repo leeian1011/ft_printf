@@ -6,7 +6,7 @@
 /*   By: ialee <ialee@student.42kl.edu.my>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 21:11:23 by ialee             #+#    #+#             */
-/*   Updated: 2024/12/02 21:39:36 by ialee            ###   ########.fr       */
+/*   Updated: 2024/12/03 20:53:03 by ialee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ static int	fmtc_print_specifier(t_fmt *fmt, char c)
 static int	fmtstr_prints(t_fmt *fmt, char *arg, long len)
 {
 	int	index;
-  int copy_len;
+	int	copy_len;
 
 	index = 0;
 	if (fmt->flag_mask & FLAG_DASH_MASK)
 	{
-    copy_len = len;
-    while (copy_len-- > 0)
-      fmt->buf[index++] = *arg++;
+		copy_len = len;
+		while (copy_len-- > 0)
+			fmt->buf[index++] = *arg++;
 		while ((long)(fmt->width_len-- - len) > 0)
 			fmt->buf[index++] = ' ';
 		return (write(1, fmt->buf, index));
@@ -55,16 +55,16 @@ static int	fmtstr_prints(t_fmt *fmt, char *arg, long len)
 	{
 		while ((long)(fmt->width_len-- - len) > 0)
 			fmt->buf[index++] = ' ';
-    if ((fmt->flag_mask & FLAG_DOT_MASK && (long)fmt->precision_len < len) || len == 0)
-    {
-      while ((long)fmt->precision_len-- > 0)
-        fmt->buf[index++] = *arg++;
-    }
-    else
-    {
-      while (len-- > 0)
-        fmt->buf[index++] = *arg++;
-    }
+		if ((fmt->flag_mask & FLAG_DOT_MASK && (long)fmt->precision_len < len) || len == 0)
+		{
+			while ((long)fmt->precision_len-- > 0)
+				fmt->buf[index++] = *arg++;
+		}
+		else
+		{
+			while (len-- > 0)
+				fmt->buf[index++] = *arg++;
+		}
 		return (write(1, fmt->buf, index));
 	}
 	else
@@ -92,7 +92,7 @@ static int	fmtstr_establish_str(t_fmt *fmt, char **str, long *full_len)
 	}
 	result = ft_strlen(*str);
 	if (fmt->flag_mask & FLAG_DOT_MASK && result > fmt->precision_len)
-    result = fmt->precision_len;
+		result = fmt->precision_len;
 	*full_len = result;
 	if (fmt->width_len > result)
 		*full_len = fmt->width_len;
